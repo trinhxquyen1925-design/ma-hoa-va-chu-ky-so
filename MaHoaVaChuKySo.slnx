@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/MaHoaVaChuKySo.Console/MaHoaVaChuKySo.Console.csproj" />
+    <Project Path="src/MaHoaVaChuKySo.Core/MaHoaVaChuKySo.Core.csproj" />
+    <Project Path="src/MaHoaVaChuKySo.Desktop/MaHoaVaChuKySo.Desktop.csproj" />
+  </Folder>
+</Solution>
