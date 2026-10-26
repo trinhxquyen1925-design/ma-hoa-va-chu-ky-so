@@ -5,6 +5,11 @@ if (args.Length > 0 && args[0] == "benchmark")
     AesBenchmarkService.Run(mode, AesKeyService.GenerateKey());
     return;
 }
+if (args.Length > 0 && args[0] == "rsabenchmark")
+{
+    RsaBenchmarkService.Run(args.Length > 1 ? args[1] : "quick");
+    return;
+}
 
 
 var key = AesKeyService.GenerateKey();
