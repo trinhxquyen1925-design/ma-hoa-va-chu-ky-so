@@ -1,4 +1,11 @@
 ﻿using MaHoaVaChuKySo.Core;
+if (args.Length > 0 && args[0] == "benchmark")
+{
+    var mode = args.Length > 1 ? args[1] : "quick";
+    AesBenchmarkService.Run(mode, AesKeyService.GenerateKey());
+    return;
+}
+
 
 var key = AesKeyService.GenerateKey();
 Console.WriteLine($"Da sinh khoa, do dai: {key.Length} byte");
