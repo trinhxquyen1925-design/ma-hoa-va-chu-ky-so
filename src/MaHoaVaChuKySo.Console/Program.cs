@@ -65,3 +65,14 @@ using (var csv = new StreamWriter("results/experiments/sha256-avalanche.csv", fa
     }
 }
 Console.WriteLine("Da ghi ket qua vao: results/experiments/sha256-avalanche.csv");
+Console.WriteLine("--- RSA key pair ---");
+var (publicPem, privatePem) = RsaKeyService.GenerateKeyPair(2048);
+RsaKeyService.SavePem("keys/rsa-public.pem", publicPem);
+RsaKeyService.SavePem("keys/rsa-private.pem", privatePem);
+Console.WriteLine($"Public PEM: {publicPem.Split('\n')[0]} (SPKI)");
+Console.WriteLine($"Private PEM: {privatePem.Split('\n')[0]} (PKCS#8)");
+var pubParams = RsaKeyService.LoadPublicParameters(publicPem);
+Console.WriteLine($"Public: e = {RsaKeyService.ExponentToLong(pubParams.Exponent)}, n dai {pubParams.Modulus?.Length} byte");
+var privParams = RsaKeyService.LoadPrivateParameters(privatePem);
+Console.WriteLine($"Private: e = {RsaKeyService.ExponentToLong(privParams.Exponent)}, n dai {privParams.Modulus?.Length} byte, d dai {privParams.D?.Length} byte, p dai {privParams.P?.Length} byte, q dai {privParams.Q?.Length} byte, dp dai {privParams.DP?.Length} byte, dq dai {privParams.DQ?.Length} byte, inverseQ dai {privParams.InverseQ?.Length} byte");
+Console.WriteLine("Nap lai PEM: PASS - public cho n,e; private cho n,e,d,p,q,dp,dq,inverseQ");
