@@ -40,3 +40,28 @@ var originalBytes = File.ReadAllBytes(samplePath);
 var decryptedBytes = File.ReadAllBytes(decPath);
 Console.WriteLine(decryptedBytes.SequenceEqual(originalBytes) ? "Ma hoa file: PASS - giai ma khop goc" : "Ma hoa file: FAIL");
 Console.WriteLine($"Kich thuoc: goc {originalBytes.Length} byte, ma hoa {new FileInfo(encPath).Length} byte, giai ma {decryptedBytes.Length} byte");
+Console.WriteLine("--- SHA-256 avalanche ---");
+Directory.CreateDirectory("results/experiments");
+var pairs = new (string A, string B)[]
+{
+    ("hello", "hellp"),
+    ("Xin chao", "Xin chbo"),
+    ("An toàn", "An toan"),
+    ("", "a"),
+    ("Ma hoa", "Ma hoa"),
+};
+using (var csv = new StreamWriter("results/experiments/sha256-avalanche.csv", false, System.Text.Encoding.UTF8))
+{
+    csv.WriteLine("InputA,InputB,DifferentBits,Percent");
+    foreach (var (a, b) in pairs)
+    {
+        var hashA = HashService.HashText(a);
+        var hashB = HashService.HashText(b);
+        var diff = HashService.CountDifferentBits(a, b);
+        Console.WriteLine($"\"{a}\" vs \"{b}\": {diff}/256 bit ({diff / 256.0 * 100:F1}%)");
+        Console.WriteLine($"  {hashA}");
+        Console.WriteLine($"  {hashB}");
+        csv.WriteLine($"\"{a}\",\"{b}\",{diff},{diff / 256.0 * 100:F1}");
+    }
+}
+Console.WriteLine("Da ghi ket qua vao: results/experiments/sha256-avalanche.csv");
