@@ -102,3 +102,16 @@ catch (ArgumentException)
     Console.WriteLine("Gioi han 190 byte: PASS - du lieu 191 byte bi tu choi");
 }
 
+Console.WriteLine("--- Chu ky so RSA ---");
+var dataToSign = System.Text.Encoding.UTF8.GetBytes("Van ban can ky: Bao cao mon An toan thong tin");
+var signPubPem = RsaKeyService.LoadPem("keys/rsa-public.pem");
+var signPrivPem = RsaKeyService.LoadPem("keys/rsa-private.pem");
+var pssSig1 = SignatureService.SignPss(dataToSign, signPrivPem);
+var pssSig2 = SignatureService.SignPss(dataToSign, signPrivPem);
+Console.WriteLine($"PSS: chu ky dai {pssSig1.Length} byte, 2 lan ky khac nhau: {(pssSig1.SequenceEqual(pssSig2) ? "FAIL" : "PASS")}");
+Console.WriteLine($"PSS xac minh: {(SignatureService.VerifyPss(dataToSign, pssSig1, signPubPem) && SignatureService.VerifyPss(dataToSign, pssSig2, signPubPem) ? "PASS - ca 2 chu ky deu hop le" : "FAIL")}");
+var pkcsSig1 = SignatureService.SignPkcs1(dataToSign, signPrivPem);
+var pkcsSig2 = SignatureService.SignPkcs1(dataToSign, signPrivPem);
+Console.WriteLine($"PKCS#1 v1.5: chu ky dai {pkcsSig1.Length} byte, 2 lan ky giong het nhau: {(pkcsSig1.SequenceEqual(pkcsSig2) ? "PASS - xac dinh, khong co salt" : "FAIL")}");
+var tamperedData = System.Text.Encoding.UTF8.GetBytes("Van ban can ky: Bao cao mon An toan thong tin!");
+Console.WriteLine($"PSS xac minh du lieu bi sua: {(!SignatureService.VerifyPss(tamperedData, pssSig1, signPubPem) ? "PASS - bi tu choi" : "FAIL")}");
