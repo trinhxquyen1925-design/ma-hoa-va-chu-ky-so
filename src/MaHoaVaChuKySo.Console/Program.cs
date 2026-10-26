@@ -22,3 +22,14 @@ Console.WriteLine(decryptedText == text ? "Giai ma van ban: PASS" : "Giai ma van
 
 var encryptedEmpty = AesGcmService.EncryptText("", loaded);
 Console.WriteLine(AesGcmService.DecryptText(encryptedEmpty, loaded) == "" ? "Van ban rong: PASS" : "Van ban rong: FAIL");
+Directory.CreateDirectory("test-data");
+var samplePath = "test-data/sample.txt";
+if (!File.Exists(samplePath)) File.WriteAllText(samplePath, "Day la file mau de thu ma hoa AES - tieng Viet co dau! ");
+var encPath = "test-data/sample.enc";
+var decPath = "test-data/sample.dec.txt";
+AesFileService.EncryptFile(samplePath, encPath, loaded, overwrite: true);
+AesFileService.DecryptFile(encPath, decPath, loaded, overwrite: true);
+var originalBytes = File.ReadAllBytes(samplePath);
+var decryptedBytes = File.ReadAllBytes(decPath);
+Console.WriteLine(decryptedBytes.SequenceEqual(originalBytes) ? "Ma hoa file: PASS - giai ma khop goc" : "Ma hoa file: FAIL");
+Console.WriteLine($"Kich thuoc: goc {originalBytes.Length} byte, ma hoa {new FileInfo(encPath).Length} byte, giai ma {decryptedBytes.Length} byte");
